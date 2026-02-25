@@ -36,19 +36,36 @@ def simple_calculator(operation: str, num1: float, num2: float) -> float:
             raise ValueError("Cannot divide by zero.")
     else:
         raise ValueError("Invalid operation. Please choose from 'add', 'subtract', 'multiply', or 'divide'.")
+    
+def get_valid_input(prompt, type_func=float, valid_options=None):
+    while True:
+        value = input(prompt).strip()
+        if valid_options:
+            value_lower = value.lower()
+            if value_lower in valid_options:
+                return value_lower
+            print(f"Invalid input. Choose from {valid_options}.")
+        else:
+            try:
+                return type_func(value)
+            except (ValueError, TypeError):
+                print("Not a valid input.")
+
 
 def main():
-    
-    print(f"===== Simple Calculator =====")
+    print("===== Simple Calculator =====")
 
-    # Ask the user for sample input    
-    num1 = float(input("Enter the first number: "))
-    num2 = float(input("Enter the second number: "))
-    operation = input("Enter the operation (add, subtract, multiply, divide): ").strip().lower()
+    num1 = get_valid_input("Enter the first number: ")
+    num2 = get_valid_input("Enter the second number: ")
+    operation = get_valid_input("Enter the operation (add, subtract, multiply, divide): ",
+                                type_func=str,
+                                valid_options=["add", "subtract", "multiply", "divide"])
 
-    # Perform the calculation and display the result
-    result = simple_calculator(operation, num1, num2)
-    print(f"The result of {operation}ing {num1} and {num2} is: {result}")
+    try:
+        result = simple_calculator(operation, num1, num2)
+        print(f"The result of {operation}ing {num1} and {num2} is: {result}")
+    except ValueError as e:
+        print(f"Error: {e}")
 
 
 if __name__ == "__main__":
